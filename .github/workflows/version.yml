@@ -2,20 +2,42 @@ name: Version Bump
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   bump-version:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # ✅ allow pushing tags & commits
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
-      - name: Automated Version Bump
-        uses: phips28/gh-action-bump-version@v11.0.7
-        with:
-          tag-prefix: "v"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Bump version in setup.py
+        run: |
+          python - <<EOF
+          import re
+          import sys
+
+          setup_file = "config/setup.py"
+
+          with open(setup_file, "r") as f:
+              content = f.read()
+
+          # match version = "x.y.z"
+          new_content = re.sub(
+              r'version\s*=\s*["\'](\d+)\.(\d+)\.(\d+)["\']',
+              lambda m: f'version="{m.group(1)}.{m.group(2)}.{int(m.group(3))+1}"',
+              content
+          )
+
+          with open(setup_file, "w") as f:
+              f.write(new_content)
+          EOF
+
+      - name: Commit and push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add config/setup.py
+          git commit -m "Bump patch version" || echo "No changes to commit"
+          git push
