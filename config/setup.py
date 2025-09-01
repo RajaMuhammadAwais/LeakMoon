@@ -17,7 +17,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="leakmon",
-    version="1.0.0",
+    version="1.0.1",
     author="LeakMon Team",
     author_email="contact@leakmon.dev",
     description="Real-Time Secret & PII Leak Detection for Local Development",
