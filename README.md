@@ -12,8 +12,6 @@
 <!-- Python / Dependencies -->
 ![Python version](https://img.shields.io/badge/python-3.11+-blue?style=for-the-badge)
 <!-- CI/CD / Quality -->
-![Build Status](https://img.shields.io/github/actions/workflow/status/RajaMuhammadAwais/LeakMoon/test.yml?branch=main&style=for-the-badge)
-![Code Coverage](https://img.shields.io/codecov/c/github/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
 ![Maintainability](https://img.shields.io/codefactor/grade/github/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
 
 <!-- Security / Analysis -->
