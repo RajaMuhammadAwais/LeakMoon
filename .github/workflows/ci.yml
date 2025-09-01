@@ -1,10 +1,11 @@
-name: CI
+name: LeakMoon CI
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:   # Manual trigger
 
 jobs:
   build-and-test:
@@ -26,14 +27,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f config/requirements.txt ]; then pip install -r config/requirements.txt; fi
-          pip install pytest flake8
+          pip install pytest flake8 pytest-cov
 
       # 4️⃣ Lint code
       - name: Lint with flake8
         run: |
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-      # 5️⃣ Add dummy test (so pytest runs)
+      # 5️⃣ Add dummy test if none exist
       - name: Create dummy test if none exists
         run: |
           mkdir -p tests
@@ -41,26 +42,27 @@ jobs:
             echo "def test_placeholder():\n    assert True" > tests/test_placeholder.py
           fi
 
-      # 6️⃣ Run tests (with coverage ready for future)
+      # 6️⃣ Run tests with coverage
       - name: Run tests
         run: |
           pytest --cov=leakmoon --cov-report=xml --cov-report=term tests/ || echo "No real tests found"
 
-      # 7️⃣ Verify coverage file (optional, shows file in logs)
+      # 7️⃣ Verify coverage file
       - name: Verify coverage file
-        run: ls -l ./coverage.xml || echo "No coverage file yet"
+        run: |
+          if [ -f coverage.xml ]; then ls -l coverage.xml; else echo "No coverage file yet"; fi
 
-      # 8️⃣ Optional Codecov upload (only works when tests exist)
+      # 8️⃣ Upload coverage to Codecov (if token exists)
       - name: Upload coverage to Codecov
         if: ${{ secrets.CODECOV_TOKEN != '' }}
         run: |
-          if [ -f ./coverage.xml ]; then
-            codecov -f ./coverage.xml -t ${{ secrets.CODECOV_TOKEN }}
+          if [ -f coverage.xml ]; then
+            codecov -f coverage.xml -t ${{ secrets.CODECOV_TOKEN }}
           else
             echo "No coverage file, skipping upload."
           fi
 
-      # 9️⃣ Optional LeakMoon secret scan
+      # 9️⃣ Optional LeakMoon scan
       - name: Run LeakMoon scan
         run: |
           echo "LeakMoon scan would run here (e.g., leakmoon scan .)"
