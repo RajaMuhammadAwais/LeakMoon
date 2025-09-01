@@ -35,7 +35,6 @@ jobs:
         id: leakscan
         run: |
           mkdir -p scan_results
-          # Scan the main directories for secrets/PII
           leakmoon scan core/ web/ config/ test_files/ > scan_results/leaks.txt || true
           leaks_count=$(wc -l < scan_results/leaks.txt)
           echo "leaks_count=$leaks_count" >> $GITHUB_ENV
@@ -50,8 +49,11 @@ jobs:
             const leaksFile = 'scan_results/leaks.txt';
             const leaksExist = fs.existsSync(leaksFile) && fs.readFileSync(leaksFile, 'utf8').trim() !== '';
 
+            // Use octokit.rest to access issues
+            const octokit = github;
+
             // List existing open LeakMoon issues
-            const { data: issues } = await github.issues.listForRepo({
+            const { data: issues } = await octokit.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
@@ -64,7 +66,7 @@ jobs:
               const leaks = fs.readFileSync(leaksFile, 'utf8');
               if (existing) {
                 // Update existing issue
-                await github.issues.update({
+                await octokit.rest.issues.update({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: existing.number,
@@ -72,7 +74,7 @@ jobs:
                 });
               } else {
                 // Create a new issue
-                await github.issues.create({
+                await octokit.rest.issues.create({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   title: `LeakMoon detected ${process.env.leaks_count} potential secret(s)`,
@@ -82,7 +84,7 @@ jobs:
               }
             } else if (existing) {
               // Close existing issue if no leaks
-              await github.issues.update({
+              await octokit.rest.issues.update({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: existing.number,
