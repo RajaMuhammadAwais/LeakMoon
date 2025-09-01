@@ -1,0 +1,46 @@
+name: Organize Leakmon Files
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  organize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Create directories
+        run: |
+          mkdir -p leakmon/core leakmon/web/templates leakmon/web/static/css leakmon/web/static/js test_files config
+
+      - name: Move files
+        run: |
+          mv -f __init__.py leakmon/core/ || true
+          mv -f secret_detector.py leakmon/core/ || true
+          mv -f file_watcher.py leakmon/core/ || true
+          mv -f logger.py leakmon/core/ || true
+
+          mv -f app.py leakmon/web/ || true
+          mv -f index.html leakmon/web/templates/ || true
+          mv -f style.css leakmon/web/static/css/ || true
+          mv -f app.js leakmon/web/static/js/ || true
+
+          mv -f sample_secrets.py test_files/ || true
+          mv -f main.py leakmon/ || true
+          mv -f requirements.txt setup.py install.sh config/ || true
+
+          # If todo.md exists, convert to README.md (unless README.md already exists)
+          if [ -f todo.md ] && [ ! -f README.md ]; then
+            mv todo.md README.md
+          fi
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Auto-organize into leakmon structure" || echo "No changes"
+          git push
