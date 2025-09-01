@@ -7,21 +7,25 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.11]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           if [ -f config/requirements.txt ]; then pip install -r config/requirements.txt; fi
           pip install pytest pytest-cov flake8
 
@@ -31,14 +35,18 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=LeakMoon tests/ --cov-report=xml --cov-report=term || echo "No tests found"
+          pytest --cov=LeakMoon --cov-report=xml --cov-report=term tests/ || echo "No tests found"
+
+      - name: Verify coverage file
+        run: ls -l ./coverage.xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
           fail_ci_if_error: true
 
-      - name: Secret/PII Scan (Optional)
+      - name: Optional LeakMoon Secret Scan
         run: |
-          echo "Run LeakMoon scan or other security tools here"
+          echo "Run LeakMoon scan here (e.g., leakmoon scan .) if desired"
