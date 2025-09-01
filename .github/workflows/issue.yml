@@ -1,0 +1,61 @@
+name: LeakMoon Auto-Issue
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  scan-and-report:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write  # Required to create GitHub issues
+
+    steps:
+      # 1️⃣ Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Set up Python
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # 3️⃣ Install project dependencies
+      - name: Install LeakMoon dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f config/requirements.txt ]; then pip install -r config/requirements.txt; fi
+
+      # 4️⃣ Run LeakMoon scan
+      - name: Run LeakMoon scan
+        id: leakscan
+        run: |
+          mkdir -p scan_results
+          # Scan the core code, web interface, config, and test files
+          leakmoon scan core/ web/ config/ test_files/ > scan_results/leaks.txt || true
+          echo "leaks_found=$(wc -l < scan_results/leaks.txt)" >> $GITHUB_ENV
+
+      # 5️⃣ Check if leaks exist and create an issue
+      - name: Create GitHub issue if leaks found
+        uses: actions/github-script@v7
+        if: env.leaks_found != '0'
+        with:
+          script: |
+            const fs = require('fs');
+            const leaks = fs.readFileSync('scan_results/leaks.txt', 'utf8');
+            github.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `LeakMoon detected ${process.env.leaks_found} potential secret(s)`,
+              body: `LeakMoon scan detected the following potential secrets, credentials, or PII in your project:\n\n${leaks}`,
+              labels: ['security', 'leakmoon']
+            });
+
+      # 6️⃣ Optional: Log if no leaks
+      - name: No leaks detected
+        if: env.leaks_found == '0'
+        run: echo "No secrets or PII detected by LeakMoon."
