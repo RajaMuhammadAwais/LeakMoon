@@ -8,8 +8,7 @@ on:
 jobs:
   organize:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -46,13 +45,10 @@ jobs:
             mv todo.md README.md
           fi
 
-          # Remove any leftover nesting
+          # Remove leftover nesting
           rm -rf leakmon || true
 
-      - name: Commit organized structure
+      - name: Show git status
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Auto-organize into standard leakmon structure" || echo "No changes"
-          git push
+          git status
+          echo "Changes are ready. Push manually or create a PR."
