@@ -34,7 +34,7 @@ jobs:
           mv -f main.py leakmon/ || true
           mv -f requirements.txt setup.py install.sh config/ || true
 
-          # Convert todo.md → README.md if needed
+          # Convert todo.md → README.md if missing
           if [ -f todo.md ] && [ ! -f README.md ]; then
             mv todo.md README.md
           fi
