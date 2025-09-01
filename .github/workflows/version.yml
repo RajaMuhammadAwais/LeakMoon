@@ -8,11 +8,13 @@ on:
 jobs:
   bump-version:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # ✅ allow pushing tags & commits
     steps:
       - uses: actions/checkout@v4
 
-      - name: Bump version
-        uses: phips28/gh-action-bump-version@v10.0.6
+      - name: Automated Version Bump
+        uses: phips28/gh-action-bump-version@v11.0.7
         with:
           tag-prefix: "v"
         env:
