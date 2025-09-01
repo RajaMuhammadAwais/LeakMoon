@@ -11,7 +11,7 @@ jobs:
   scan-and-report:
     runs-on: ubuntu-latest
     permissions:
-      issues: write  # Required to create/update issues
+      issues: write  # Needed to create/update issues
 
     steps:
       # 1️⃣ Checkout repository
@@ -24,7 +24,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      # 3️⃣ Install project dependencies
+      # 3️⃣ Install LeakMoon dependencies
       - name: Install LeakMoon dependencies
         run: |
           python -m pip install --upgrade pip
@@ -35,20 +35,22 @@ jobs:
         id: leakscan
         run: |
           mkdir -p scan_results
+          # Scan the main directories for secrets/PII
           leakmoon scan core/ web/ config/ test_files/ > scan_results/leaks.txt || true
           leaks_count=$(wc -l < scan_results/leaks.txt)
           echo "leaks_count=$leaks_count" >> $GITHUB_ENV
 
-      # 5️⃣ Manage GitHub issue for leaks
+      # 5️⃣ Create, update, or close GitHub issue
       - name: Create or update LeakMoon issue
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
             const leaksFile = 'scan_results/leaks.txt';
             const leaksExist = fs.existsSync(leaksFile) && fs.readFileSync(leaksFile, 'utf8').trim() !== '';
-            
-            // Search for an existing open LeakMoon issue
+
+            // List existing open LeakMoon issues
             const { data: issues } = await github.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -79,7 +81,7 @@ jobs:
                 });
               }
             } else if (existing) {
-              // No leaks found, close the issue
+              // Close existing issue if no leaks
               await github.issues.update({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
