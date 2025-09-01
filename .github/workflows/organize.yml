@@ -9,18 +9,18 @@ jobs:
   organize:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # allow commits & pushes
+      contents: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Create directories
+      - name: Ensure directory structure
         run: |
           mkdir -p core web/templates web/static/css web/static/js config test_files
 
-      - name: Move files into structure
+      - name: Move files into correct locations
         run: |
-          # Python core logic
+          # Core detection logic
           mv -f __init__.py core/ || true
           mv -f secret_detector.py core/ || true
           mv -f file_watcher.py core/ || true
@@ -32,25 +32,27 @@ jobs:
           mv -f style.css web/static/css/ || true
           mv -f app.js web/static/js/ || true
 
-          # Config & test files
+          # Config
+          mv -f install.sh requirements.txt setup.py config/ || true
+
+          # Tests
           mv -f sample_secrets.py test_files/ || true
-          mv -f requirements.txt setup.py install.sh config/ || true
 
           # CLI entry point
           mv -f main.py ./ || true
 
-          # If todo.md exists, rename to README.md (if README.md missing)
+          # Docs
           if [ -f todo.md ] && [ ! -f README.md ]; then
             mv todo.md README.md
           fi
 
-          # Cleanup any leftover "leakmon" folder
+          # Remove any leftover nesting
           rm -rf leakmon || true
 
-      - name: Commit and push changes
+      - name: Commit organized structure
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Auto-organize repo structure at root" || echo "No changes"
+          git commit -m "Auto-organize into standard leakmon structure" || echo "No changes"
           git push
