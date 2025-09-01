@@ -19,7 +19,7 @@ setup(
     name="leakmon",
     version="1.0.1",
     author="LeakMon Team",
-    author_email="contact@leakmon.dev",
+    author_email="muhammadawaisturk1@gmail.com",
     description="Real-Time Secret & PII Leak Detection for Local Development",
     long_description=long_description,
     long_description_content_type="text/markdown",
