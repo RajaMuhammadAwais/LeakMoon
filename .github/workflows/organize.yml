@@ -1,4 +1,4 @@
-name: Reorganize Files
+name: Organize Files
 
 on:
   push:
@@ -9,29 +9,48 @@ jobs:
   organize:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write   # allow commits & pushes
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Move leakmon contents up
+      - name: Create directories
         run: |
-          # Make sure target dirs exist
-          mkdir -p core web config test_files
+          mkdir -p core web/templates web/static/css web/static/js config test_files
 
-          # Move everything out of leakmon/
-          if [ -d leakmon/core ]; then mv -f leakmon/core ./core/; fi
-          if [ -d leakmon/web ]; then mv -f leakmon/web ./web/; fi
-          if [ -f leakmon/main.py ]; then mv -f leakmon/main.py ./; fi
-          if [ -f leakmon/__init__.py ]; then rm -f leakmon/__init__.py; fi
+      - name: Move files into structure
+        run: |
+          # Python core logic
+          mv -f __init__.py core/ || true
+          mv -f secret_detector.py core/ || true
+          mv -f file_watcher.py core/ || true
+          mv -f logger.py core/ || true
 
-          # Remove empty leakmon folder
-          rm -rf leakmon
+          # Web interface
+          mv -f app.py web/ || true
+          mv -f index.html web/templates/ || true
+          mv -f style.css web/static/css/ || true
+          mv -f app.js web/static/js/ || true
+
+          # Config & test files
+          mv -f sample_secrets.py test_files/ || true
+          mv -f requirements.txt setup.py install.sh config/ || true
+
+          # CLI entry point
+          mv -f main.py ./ || true
+
+          # If todo.md exists, rename to README.md (if README.md missing)
+          if [ -f todo.md ] && [ ! -f README.md ]; then
+            mv todo.md README.md
+          fi
+
+          # Cleanup any leftover "leakmon" folder
+          rm -rf leakmon || true
 
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Flatten structure: move leakmon/ contents to repo root" || echo "No changes"
+          git commit -m "Auto-organize repo structure at root" || echo "No changes"
           git push
