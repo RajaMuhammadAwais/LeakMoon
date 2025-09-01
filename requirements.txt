@@ -1,0 +1,9 @@
+watchdog>=6.0.0
+rich>=14.1.0
+flask>=3.1.0
+flask-socketio>=5.5.0
+python-socketio>=5.12.0
+python-engineio>=4.11.0
+bidict>=0.21.0
+simple-websocket>=0.10.0
+
