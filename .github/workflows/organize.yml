@@ -8,6 +8,8 @@ on:
 jobs:
   organize:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # ✅ allows committing & pushing with GITHUB_TOKEN
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -16,7 +18,7 @@ jobs:
         run: |
           mkdir -p leakmon/core leakmon/web/templates leakmon/web/static/css leakmon/web/static/js test_files config
 
-      - name: Move files
+      - name: Move files into leakmon structure
         run: |
           mv -f __init__.py leakmon/core/ || true
           mv -f secret_detector.py leakmon/core/ || true
@@ -32,15 +34,15 @@ jobs:
           mv -f main.py leakmon/ || true
           mv -f requirements.txt setup.py install.sh config/ || true
 
-          # If todo.md exists, convert to README.md (unless README.md already exists)
+          # Convert todo.md → README.md if needed
           if [ -f todo.md ] && [ ! -f README.md ]; then
             mv todo.md README.md
           fi
 
-      - name: Commit changes
+      - name: Commit and push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Auto-organize into leakmon structure" || echo "No changes"
+          git commit -m "Auto-organize into leakmon structure" || echo "No changes to commit"
           git push
