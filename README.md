@@ -11,16 +11,12 @@
 
 <!-- Python / Dependencies -->
 ![Python version](https://img.shields.io/badge/python-3.11+-blue?style=for-the-badge)
-![PyPI](https://img.shields.io/pypi/v/LeakMoon?style=for-the-badge) 
-![Dependencies](https://img.shields.io/librariesio/release/pypi/LeakMoon?style=for-the-badge)
-
 <!-- CI/CD / Quality -->
 ![Build Status](https://img.shields.io/github/actions/workflow/status/RajaMuhammadAwais/LeakMoon/test.yml?branch=main&style=for-the-badge)
 ![Code Coverage](https://img.shields.io/codecov/c/github/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
 ![Maintainability](https://img.shields.io/codefactor/grade/github/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
 
 <!-- Security / Analysis -->
-![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
 ![License](https://img.shields.io/github/license/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
 
 <!-- Activity -->
