@@ -8,17 +8,13 @@
 ![GitHub issues](https://img.shields.io/github/issues/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
 ![GitHub license](https://img.shields.io/github/license/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
-
 <!-- Python / Dependencies -->
 ![Python version](https://img.shields.io/badge/python-3.11+-blue?style=for-the-badge)
-
 <!-- Security / Analysis -->
 ![License](https://img.shields.io/github/license/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
-
 <!-- Activity -->
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
 ![GitHub repo size](https://img.shields.io/github/repo-size/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
-
 <!-- Others -->
 ![Awesome Python](https://img.shields.io/badge/awesome-python-ff69b4?style=for-the-badge)
 ![ChatGPT Approved](https://img.shields.io/badge/chatgpt-approved-success?style=for-the-badge)
