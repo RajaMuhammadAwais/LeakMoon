@@ -1,14 +1,15 @@
 # LeakMon: Real-Time Secret & PII Leak Detection
 
-![GitHub repo size](https://img.shields.io/github/repo-size/yourusername/leakmon?style=for-the-badge)
-![GitHub contributors](https://img.shields.io/github/contributors/yourusername/leakmon?style=for-the-badge)
-![GitHub stars](https://img.shields.io/github/stars/yourusername/leakmon?style=for-the-badge)
-![GitHub forks](https://img.shields.io/github/forks/yourusername/leakmon?style=for-the-badge)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/leakmon?style=for-the-badge)
-![GitHub license](https://img.shields.io/github/license/yourusername/leakmon?style=for-the-badge)
-![GitHub last commit](https://img.shields.io/github/last-commit/yourusername/leakmon?style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
+![GitHub contributors](https://img.shields.io/github/contributors/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
+![GitHub stars](https://img.shields.io/github/stars/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
+![GitHub issues](https://img.shields.io/github/issues/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
+![GitHub license](https://img.shields.io/github/license/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/RajaMuhammadAwais/LeakMoon?style=for-the-badge)
 ![Python version](https://img.shields.io/badge/python-3.11+-blue?style=for-the-badge)
-![Build Status](https://img.shields.io/github/workflow/status/yourusername/leakmon/CI?style=for-the-badge)
+![Build Status](https://img.shields.io/github/workflow/status/RajaMuhammadAwais/LeakMoon/CI?style=for-the-badge)
+
 
 
 LeakMon is a powerful CLI daemon and web-based tool that monitors file changes, shell commands, and git operations in real-time to detect unintentional leaks of secrets, credentials, or sensitive data (like PII or API keys) before they're committed or exfiltrated.
