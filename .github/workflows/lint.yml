@@ -1,0 +1,17 @@
+name: Lint
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+      - name: Install linters
+        run: pip install flake8 black
+      - name: Run Flake8
+        run: flake8 leakmon/
+      - name: Run Black (check only)
+        run: black --check leakmon/
